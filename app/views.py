@@ -4,8 +4,12 @@ from django.contrib import messages
 from .forms import *
 
 class IndexView(View):
-    def RegistrarUsuario(self, request, *args, **kwargs):
-        form = CadastroForm(request.POST, request.FILES)
+    def get(self, request):
+        form = CadastroForm()
+        return render(request, 'index.html', {'form': form})
+    
+    def post(self, request):
+        form = CadastroForm(request.POST)
         if form.is_valid():
             nome = form.cleaned_data.get('nome')
             senha = form.cleaned_data.get('senha')
