@@ -5,5 +5,6 @@ import app.views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.IndexView.as_view(), name='index')
+    path('', views.IndexView.as_view(), name='index'),
+    path('hangmangame/', views.HangmanView.as_view(), name='jogo')
 ]
