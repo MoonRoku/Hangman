@@ -5,8 +5,10 @@
     <title>Jogo</title>
 </head>
 <body>
+    <h1>Bem vindo {{ nome }}</h1>
+    
     <h1>Jogo da Forca</h1>
-    <p>Dica: {{ dica }}</p>
+    <p>Dica: {{ palavra }}</p>
     <p id="palavra-oculta">{{ palavra_oculta }}</p>
     <input type="text" id="tentativa" maxlength="1">
     <button onclick="enviarTentativa()">Enviar Tentativa</button>
@@ -15,66 +17,7 @@
     <p id="mensagem">{{ message }}</p>
 
     <script>
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        function enviarTentativa() {
-            const tentativam = document.getElementById('tentativa').value;
-            const tentativa = tentativam.toUpperCase()
-            const palavraOculta = document.getElementById('palavra-oculta').textContent;
-            const tentativasRestantes = document.getElementById('tentativas-restantes').textContent.match(/\d+/)[0];
-            const palavraId = document.getElementById('palavra-id').value;
-            const csrftoken = getCookie('csrftoken');
-
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '';
-
-            const inputTentativa = document.createElement('input');
-            inputTentativa.type = 'hidden';
-            inputTentativa.name = 'tentativa';
-            inputTentativa.value = tentativa;
-            form.appendChild(inputTentativa);
-
-            const inputPalavraOculta = document.createElement('input');
-            inputPalavraOculta.type = 'hidden';
-            inputPalavraOculta.name = 'palavra_oculta';
-            inputPalavraOculta.value = palavraOculta;
-            form.appendChild(inputPalavraOculta);
-
-            const inputTentativasRestantes = document.createElement('input');
-            inputTentativasRestantes.type = 'hidden';
-            inputTentativasRestantes.name = 'tentativas_restantes';
-            inputTentativasRestantes.value = tentativasRestantes;
-            form.appendChild(inputTentativasRestantes);
-
-            const inputPalavraId = document.createElement('input');
-            inputPalavraId.type = 'hidden';
-            inputPalavraId.name = 'palavra_id';
-            inputPalavraId.value = palavraId;
-            form.appendChild(inputPalavraId);
-
-            const inputCSRFToken = document.createElement('input');
-            inputCSRFToken.type = 'hidden';
-            inputCSRFToken.name = 'csrfmiddlewaretoken';
-            inputCSRFToken.value = csrftoken;
-            form.appendChild(inputCSRFToken);
-
-            document.body.appendChild(form);
-            form.submit();
-        }
+        
     </script>
 </body>
 </html>

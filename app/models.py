@@ -28,10 +28,14 @@ class Palavra(models.Model):
         verbose_name_plural = "palavras"
         
 class Jogo(models.Model):
-    tempo = models.TimeField(verbose_name='Tempo de conclusão')
-    jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name = "Jogador")
+    palavra = models.ForeignKey(Palavra, on_delete=models.CASCADE, verbose_name="Palavra do Jogo")
+    jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Jogador")
+    palavra_oculta = models.CharField(max_length=255, verbose_name="Palavra Oculta")
+    tentativas_restantes = models.IntegerField(default=6, verbose_name="Tentativas Restantes")
+    
     def __str__(self):
-            return f"O jogador: {self.jogador}' concluiu em' {self.tempo} tempo."
+        return f"Jogador: {self.jogador}, Palavra: {self.palavra.palavra}, Tentativas Restantes: {self.tentativas_restantes}"
+    
     class Meta:
         verbose_name = "Jogo"
         verbose_name_plural = "Jogos"
