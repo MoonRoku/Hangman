@@ -37,10 +37,10 @@ class HangmanView(View):
         nome = request.session.get('nome')
         
         palavra = Palavra.objects.order_by('?').first()
-        dica = Palavra.dica
+        dica = palavra.dica
+        palavraP = palavra.palavra
         
-        
-        return render(request, 'hangmangame.html', {'nome': nome, 'palavra': palavra, 'dica': dica})
+        return render(request, 'hangmangame.html', {'nome': nome, 'palavra': palavra, 'dica': dica, 'palavraP': palavraP})
 
     def post(self, request):
         return

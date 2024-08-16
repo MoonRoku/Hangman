@@ -6,18 +6,68 @@
 </head>
 <body>
     <h1>Bem vindo {{ nome }}</h1>
+    <a href="{% url 'admin:index' %}">Admin</a>
     
     <h1>Jogo da Forca</h1>
-    <p>Dica: {{ palavra }}</p>
-    <p id="palavra-oculta">{{ palavra_oculta }}</p>
+    <p>Dica: {{ dica }}</p>
+    <p id="palavra_oculta"></p>
     <input type="text" id="tentativa" maxlength="1">
     <button onclick="enviarTentativa()">Enviar Tentativa</button>
-    <p id="tentativas-restantes">Tentativas restantes: {{ tentativas_restantes }}</p>
+    <p id="tentativas_restantes"></p>
     <input type="hidden" id="palavra-id" value="{{ palavra_id }}">
+
     <p id="mensagem">{{ message }}</p>
 
     <script>
-        
+        const Apalavra = '{{ palavraP }}';
+        const palavraArray = Apalavra.split(''); 
+        let tentativaAtual = Array(palavraArray.length).fill('_'); 
+        let tentativasRestantes = 6;
+        const divPalavraOculta = document.getElementById('palavra_oculta');
+        const inputTentativa = document.getElementById('tentativa');
+        const pTentativasRestantes = document.getElementById('tentativas_restantes');
+        const pMensagem = document.getElementById('mensagem');
+
+        function imprimir_palavra() {
+            divPalavraOculta.textContent = tentativaAtual.join(' '); 
+        }
+
+        function enviarTentativa() {
+            const letraTentativa = inputTentativa.value.toUpperCase();
+
+            if (letraTentativa.length === 0) {
+                pMensagem.textContent = 'Por favor, insira uma letra.';
+                return;
+            }
+
+            if (tentativaAtual.includes(letraTentativa) || !Apalavra.includes(letraTentativa)) {
+                pMensagem.textContent = 'Letra já tentada ou não está na palavra.';
+                console.log('errou')
+                pTentativasRestantes.textContent = `Tentativas restantes: ${tentativasRestantes}`
+                tentativasRestantes--;
+                pTentativasRestantes.textContent = `Tentativas restantes: ${tentativasRestantes}`;
+                pMensagem.textContent = `Letra incorreta.`;
+                return;
+            }
+
+            
+            for (let i = 0; i < palavraArray.length; i++) {
+                if (palavraArray[i] === letraTentativa) {
+                    tentativaAtual[i] = letraTentativa; 
+                }
+            }
+
+            imprimir_palavra();
+
+            if (!tentativaAtual.includes('_')) {
+                pMensagem.textContent = 'Parabéns! Você acertou a palavra!';
+            }
+
+            inputTentativa.value = '';
+            inputTentativa.focus();
+        }
+
+        imprimir_palavra();
     </script>
 </body>
 </html>
