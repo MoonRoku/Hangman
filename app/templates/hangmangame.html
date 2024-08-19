@@ -5,25 +5,39 @@
     <title>Jogo</title>
 </head>
 <body>
+    {% csrf_token %}
     <h1>Bem vindo {{ nome }}</h1>
-    <a href="{% url 'admin:index' %}">Admin</a>
     
     <h1>Jogo da Forca</h1>
     <p>Dica: {{ dica }}</p>
     <p id="palavra_oculta"></p>
-    <input type="text" id="tentativa" maxlength="1">
-    <button onclick="enviarTentativa()">Enviar Tentativa</button>
+    <form id="some_form">
+        <input type="text" id="tentativa" maxlength="1">
+        <button id="butao" onclick="enviarTentativa()">Enviar Tentativa</button>
+    </form>
     <p id="tentativas_restantes"></p>
-    <input type="hidden" id="palavra-id" value="{{ palavra_id }}">
 
     <p id="mensagem">{{ message }}</p>
 
+    <form method="post" enctype="multipart/form-data" style="display: none;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="a">Vai lá</button>
+    </form>
+
     <script>
+        //Esse trem aq evita que o formulário recarregue a página, não apaga essa bomba nn.
+        const form = document.getElementById('some_form')
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+        })
+
         const Apalavra = '{{ palavraP }}';
         const palavraArray = Apalavra.split(''); 
         let tentativaAtual = Array(palavraArray.length).fill('_'); 
-        let tentativasRestantes = 6;
+        let tentativasRestantes = 3;
         const divPalavraOculta = document.getElementById('palavra_oculta');
+        const but = document.getElementById('butao');
         const inputTentativa = document.getElementById('tentativa');
         const pTentativasRestantes = document.getElementById('tentativas_restantes');
         const pMensagem = document.getElementById('mensagem');
@@ -47,9 +61,28 @@
                 tentativasRestantes--;
                 pTentativasRestantes.textContent = `Tentativas restantes: ${tentativasRestantes}`;
                 pMensagem.textContent = `Letra incorreta.`;
+
+                //esse if aq em baixo dita tudo o que vai acontecer assim que as tentatiavas chegam a zero
+                if(tentativasRestantes == 0){
+                    but.setAttribute('disabled', 'true');
+                    window.alert('Derrota');
+                    for (let i = 5; i >= 0; i--) {
+                        setTimeout(() => {
+                            pMensagem.textContent = `Perdeu. Próxima palavra em ${i} segundos...`;
+                            if (i === 0) {
+                                window.location.reload();
+                            }
+                        }, (5 - i) * 1000);
+                    }
+                }
                 return;
             }
-
+            else{
+                pTentativasRestantes.textContent = `Tentativas restantes: ${tentativasRestantes}`
+                tentativasRestantes++;
+                pMensagem.textContent = `Letra correta.`;
+                pTentativasRestantes.textContent = `Tentativas restantes: ${tentativasRestantes}`;
+            }
             
             for (let i = 0; i < palavraArray.length; i++) {
                 if (palavraArray[i] === letraTentativa) {
@@ -61,6 +94,16 @@
 
             if (!tentativaAtual.includes('_')) {
                 pMensagem.textContent = 'Parabéns! Você acertou a palavra!';
+                but.setAttribute('disabled', 'true');
+                window.alert('Vitória!!! Salvando Resultados...');
+                for (let i = 5; i >= 0; i--) {
+                    setTimeout(() => {
+                        pMensagem.textContent = `Vitória!!! Próxima palavra em ${i} segundos...`;
+                        if (i === 0) {
+                            window.location.reload();
+                        }
+                    }, (5 - i) * 1000);
+                }
             }
 
             inputTentativa.value = '';

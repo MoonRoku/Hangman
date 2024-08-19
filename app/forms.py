@@ -6,7 +6,7 @@ class CadastroForm(forms.ModelForm):
         model = Usuario
         fields =  ['nome', 'senha']
         
-class PalavraForm(forms.ModelForm):
+class JogoForm(forms.ModelForm):
     class Meta:
-        model = Palavra
-        fields = ['palavra']
+        model = Jogo
+        fields = ['jogador', 'sequencia', 'tentativas_restantes']

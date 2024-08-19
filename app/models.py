@@ -28,9 +28,8 @@ class Palavra(models.Model):
         verbose_name_plural = "palavras"
         
 class Jogo(models.Model):
-    palavra = models.ForeignKey(Palavra, on_delete=models.CASCADE, verbose_name="Palavra do Jogo")
-    jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Jogador")
-    palavra_oculta = models.CharField(max_length=255, verbose_name="Palavra Oculta")
+    jogador = models.CharField(max_length=255, verbose_name="Jogador")
+    sequencia = models.CharField(max_length=255, verbose_name="Palavra Oculta")
     tentativas_restantes = models.IntegerField(default=6, verbose_name="Tentativas Restantes")
     
     def __str__(self):
