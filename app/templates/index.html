@@ -23,5 +23,26 @@
         {{ form.as_p }}
         <button type="submit" class="a">Vai lá</button>
     </form>
+
+    <div>
+        <table>
+            <thead>  
+                <tr>
+                    <th>Ranking</th>
+                    <th>Nome</th>
+                    <th>Sequência</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rank in rank %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ rank.jogador }}</td>
+                    <td>{{ rank.sequencia }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

@@ -6,9 +6,11 @@ from .forms import *
 class IndexView(View):
     def get(self, request):
         form = CadastroForm()
-        return render(request, 'index.html', {'form': form})
+        rank = Jogo.objects.order_by('-sequencia')
+        return render(request, 'index.html', {'form': form, 'rank': rank})
     
     def post(self, request):
+        rank = Jogo.objects.order_by('-sequencia')
         form = CadastroForm(request.POST)
         if form.is_valid():
             nome = form.cleaned_data.get('nome')
@@ -30,7 +32,7 @@ class IndexView(View):
         else:
             messages.error(request, 'Formulário inválido!')
         
-        return render(request, 'index.html', {'form': form})
+        return render(request, 'index.html', {'form': form, 'rank': rank})
 
 class HangmanView(View):
     def get(self, request):
@@ -44,7 +46,7 @@ class HangmanView(View):
         return render(request, 'hangmangame.html', {'form': form, 'nome': nome, 'palavra': palavra, 'dica': dica, 'palavraP': palavraP})
 
     def post(self, request):
-        form = CadastroForm(request.POST)
+        form = JogoForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('jogo')

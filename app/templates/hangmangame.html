@@ -6,6 +6,7 @@
 </head>
 <body>
     {% csrf_token %}
+    <a href="{% url 'index' %}">Voltar</a>
     <h1>Bem vindo {{ nome }}</h1>
     
     <h1>Jogo da Forca</h1>
@@ -19,18 +20,30 @@
 
     <p id="mensagem">{{ message }}</p>
 
-    <form method="post" enctype="multipart/form-data" style="display: none;">
+    <form id="formula" method="post" enctype="multipart/form-data" style="display: none;">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="a">Vai lá</button>
     </form>
 
     <script>
+        if(!localStorage.getItem('seq')){
+            localStorage.setItem('seq', 0);
+        }
+        let seq = localStorage.getItem('seq');
+        parseInt(seq);
+
         //Esse trem aq evita que o formulário recarregue a página, não apaga essa bomba nn.
-        const form = document.getElementById('some_form')
+        const form = document.getElementById('some_form');
         form.addEventListener('submit', e => {
-            e.preventDefault()
+            e.preventDefault();
         })
+
+        let formula = document.getElementById('formula')
+        let formulario = document.getElementsByClassName('texto');
+
+        formulario[0].value = '{{ nome }}';
+        formulario[1].value = seq;
 
         const Apalavra = '{{ palavraP }}';
         const palavraArray = Apalavra.split(''); 
@@ -66,11 +79,16 @@
                 if(tentativasRestantes == 0){
                     but.setAttribute('disabled', 'true');
                     window.alert('Derrota');
+
+                    localStorage.setItem('seq', 0);
+                    formulario[0].value = '{{ nome }}';
+                    formulario[1].value = seq;
+
                     for (let i = 5; i >= 0; i--) {
                         setTimeout(() => {
                             pMensagem.textContent = `Perdeu. Próxima palavra em ${i} segundos...`;
                             if (i === 0) {
-                                window.location.reload();
+                                formula.submit();
                             }
                         }, (5 - i) * 1000);
                     }
@@ -96,6 +114,8 @@
                 pMensagem.textContent = 'Parabéns! Você acertou a palavra!';
                 but.setAttribute('disabled', 'true');
                 window.alert('Vitória!!! Salvando Resultados...');
+                seq = parseInt(seq) + 1;
+                localStorage.setItem('seq', seq);
                 for (let i = 5; i >= 0; i--) {
                     setTimeout(() => {
                         pMensagem.textContent = `Vitória!!! Próxima palavra em ${i} segundos...`;

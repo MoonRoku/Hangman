@@ -29,11 +29,10 @@ class Palavra(models.Model):
         
 class Jogo(models.Model):
     jogador = models.CharField(max_length=255, verbose_name="Jogador")
-    sequencia = models.CharField(max_length=255, verbose_name="Palavra Oculta")
-    tentativas_restantes = models.IntegerField(default=6, verbose_name="Tentativas Restantes")
+    sequencia = models.CharField(max_length=255, verbose_name="Sequência")
     
     def __str__(self):
-        return f"Jogador: {self.jogador}, Palavra: {self.palavra.palavra}, Tentativas Restantes: {self.tentativas_restantes}"
+        return f"Jogador: {self.jogador}, teve uma sequência de {self.sequencia} palavras."
     
     class Meta:
         verbose_name = "Jogo"
